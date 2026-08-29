@@ -1,4 +1,4 @@
-.csv
-.zip
-.json
+*.csv
+*.zip
+
 /data/
