@@ -1,1 +1,1 @@
-#Terms and conditions summarizer
+# Terms and conditions summarizer
