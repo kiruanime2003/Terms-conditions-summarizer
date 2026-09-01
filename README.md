@@ -1,6 +1,6 @@
 # Terms and conditions summarizer
 
-Categorizes into benefits and warnings.
+Separates into lines and feeds each line into the model and categorizes into benefits & warnings.
 
 <img width="1727" height="558" alt="image" src="https://github.com/user-attachments/assets/523ec4b7-9a32-4917-b660-75cfcdd11d14" />
 
