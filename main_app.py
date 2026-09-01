@@ -5,24 +5,15 @@ from collections import defaultdict
 import streamlit as st
 from fastai.text.all import load_learner
 
-# -----------------------------------------------------------------------------
-# PATHLIB PATCH FOR WINDOWS
-# -----------------------------------------------------------------------------
 if sys.platform == "win32":
     pathlib.PosixPath = pathlib.WindowsPath
 
-# -----------------------------------------------------------------------------
-# PAGE CONFIGURATION
-# -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Legal Clause Scanner",
     page_icon="⚖️",
     layout="wide"
 )
 
-# -----------------------------------------------------------------------------
-# MODEL LOADING
-# -----------------------------------------------------------------------------
 MODEL_PATH = "legal_terms_conditions_model.pkl"
 
 @st.cache_resource
@@ -35,9 +26,7 @@ def load_legal_model():
 
 learn = load_legal_model()
 
-# -----------------------------------------------------------------------------
-# HIGH-RISK CATEGORIES DEFINITION
-# -----------------------------------------------------------------------------
+
 RED_CATEGORIES = [
     'Renewal Term', 'Notice Period to Terminate Renewal', 'Most Favored Nation', 
     'Non-Compete', 'Exclusivity', 'No-Solicit of Customers', 
@@ -51,9 +40,7 @@ RED_CATEGORIES = [
     'Cap on Liability', 'Liquidated Damages', 'Covenant Not to Sue'
 ]
 
-# -----------------------------------------------------------------------------
-# HELPER FUNCTIONS
-# -----------------------------------------------------------------------------
+
 def extract_clauses(text):
     lines = text.split('\n')
     return [line.strip() for line in lines if len(line.strip()) > 10]
@@ -69,13 +56,12 @@ def render_grouped_results(grouped_dict, is_red=True):
     Sorts categories from least to most occurrences and renders single
     items directly or multiple items inside a dropdown expander.
     """
-    # Sort categories by frequency ascending (least repeated to most repeated)
-    sorted_categories = sorted(grouped_dict.items(), key=lambda x: len(x[1]))
+    sorted_categories = sorted(grouped_dict.items(), key=lambda x: len(x[1]), reverse=True)
     
     for category, snippets in sorted_categories:
         count = len(snippets)
         
-        # SINGLE OCCURRENCE: Render directly
+        
         if count == 1:
             snippet_text = snippets[0]
             if is_red:
@@ -83,7 +69,7 @@ def render_grouped_results(grouped_dict, is_red=True):
             else:
                 st.success(f"**Category:** {category}\n\n**Snippet:** \"{snippet_text}\"")
                 
-        # REPEATED OCCURRENCES: Wrap in a dropdown expander
+        
         else:
             expander_title = f"{category} ({count} occurrences)"
             with st.expander(expander_title, expanded=False):
@@ -94,9 +80,7 @@ def render_grouped_results(grouped_dict, is_red=True):
                     else:
                         st.success(f"**Snippet:** \"{snippet_text}\"")
 
-# -----------------------------------------------------------------------------
-# UI INPUT SECTION
-# -----------------------------------------------------------------------------
+
 st.title("Terms and Conditions Summarizer")
 
 input_option = st.radio("Input:", ["Paste Text", "Upload File"], horizontal=True)
@@ -110,9 +94,7 @@ else:
     if uploaded_file is not None:
         user_text = uploaded_file.read().decode("utf-8")
 
-# -----------------------------------------------------------------------------
-# PREDICTION & GROUPED DISPLAY
-# -----------------------------------------------------------------------------
+
 if st.button("Predict", type="primary"):
     if not user_text.strip():
         st.warning("Please enter text or upload a file")
@@ -124,7 +106,7 @@ if st.button("Predict", type="primary"):
         if not clauses:
             st.warning("No valid text clauses detected.")
         else:
-            # Dictionaries to hold lists of snippets per category
+            
             red_grouped = defaultdict(list)
             green_grouped = defaultdict(list)
 
@@ -144,13 +126,11 @@ if st.button("Predict", type="primary"):
                         green_grouped[cat_str].append(snippet)
                         total_green += 1
 
-            # -------------------------------------------------------------
-            # SIDE-BY-SIDE GROUPED DISPLAY
-            # -------------------------------------------------------------
+            
             st.markdown("Scan Results")
             col_red, col_green = st.columns(2)
 
-            # Left Column: RED High Risk Categories
+            
             with col_red:
                 st.subheader(f"🚩Risk Categories ({total_red})")
                 if red_grouped:
@@ -158,7 +138,7 @@ if st.button("Predict", type="primary"):
                 else:
                     st.success("No high-risk categories detected.")
 
-            # Right Column: GREEN Standard Categories
+            
             with col_green:
                 st.subheader(f"✅Green Categories ({total_green})")
                 if green_grouped:
