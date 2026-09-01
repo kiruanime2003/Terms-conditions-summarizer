@@ -14,7 +14,7 @@ if sys.platform == "win32":
 
 
 st.set_page_config(
-    page_title="Legal Clause Scanner",
+    page_title="T&C Summarizer",
     page_icon="⚖️",
     layout="wide"
 )
@@ -120,7 +120,7 @@ def render_grouped_results(grouped_dict, is_red=True):
                         st.success(f"**Snippet:** \"{snippet_text}\"")
 
 
-st.title("⚖️ Legal Clause Scanner")
+st.title("Terms and Conditions Summarizer")
 
 input_option = st.radio("Choose Input Method:", ["Paste Text", "Upload File"], horizontal=True)
 
