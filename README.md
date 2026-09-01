@@ -6,7 +6,10 @@ Categorizes into benefits and warnings.
 
 <img width="1695" height="781" alt="image" src="https://github.com/user-attachments/assets/f201fd14-6c30-4b19-a077-004302745f41" />
 
+## Teck Stack
 
+- Streamlit
+- Fastai
 
 
 
